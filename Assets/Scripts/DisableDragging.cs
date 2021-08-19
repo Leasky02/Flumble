@@ -9,7 +9,6 @@ public class DisableDragging : MonoBehaviour
     public void Disable()
     {
         blocks = GameObject.FindGameObjectsWithTag("block");
-        Debug.Log("hi" + blocks.Length);
 
         for (int i = 0; i < blocks.Length; i++) 
         {
