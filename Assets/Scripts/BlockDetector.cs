@@ -4,14 +4,35 @@ using UnityEngine;
 
 public class BlockDetector : MonoBehaviour
 {
+    private bool detecting = true;
+    [SerializeField] private AudioClip audioClip;
     [SerializeField] private GameObject gameManager;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.collider.CompareTag("block"))
         {
-            gameManager.GetComponent<FourPlayerStructure>().PlayerOut();
-            //make it play particle effect
-            //make it destroy object
+            if(detecting)
+            {
+                //play audio
+                GetComponent<AudioSource>().clip = audioClip;
+                GetComponent<AudioSource>().Play();
+
+                //call player out
+                gameManager.GetComponent<FourPlayerStructure>().PlayerOut();
+                detecting = false;
+            }
+
+            //play particles
+            collision.collider.GetComponent<SpriteRenderer>().enabled = false;
+            collision.collider.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+            collision.collider.GetComponent<ParticleSystem>().Play();
+            //destroy object
+            Destroy(collision.collider, 0.4f);
         }
+    }
+
+    public void SetDetecting()
+    {
+        detecting = true;
     }
 }

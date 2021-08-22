@@ -14,4 +14,12 @@ public class CameraMovement : MonoBehaviour
     {
         GetComponent<Rigidbody2D>().AddForce(Vector2.up * speed);
     }
+    public void MoveCamLeft()
+    {
+        GetComponent<Rigidbody2D>().AddForce(Vector2.left * speed);
+    }
+    public void MoveCamRight()
+    {
+        GetComponent<Rigidbody2D>().AddForce(Vector2.right * speed);
+    }
 }

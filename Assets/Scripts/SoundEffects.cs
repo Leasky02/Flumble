@@ -5,9 +5,7 @@ using UnityEngine;
 public class SoundEffects : MonoBehaviour
 {
     private int ticks;
-    private bool inView;
     private bool timerActive = false;
-    public string tagName;
     public AudioClip audioClip;
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -25,7 +23,7 @@ public class SoundEffects : MonoBehaviour
         if(timerActive)
         {
             ticks++;
-            if (ticks > 10)
+            if (ticks > 15)
             {
                 timerActive = false;
                 ticks = 0;

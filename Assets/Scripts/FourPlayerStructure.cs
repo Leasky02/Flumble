@@ -8,15 +8,14 @@ public class FourPlayerStructure : MonoBehaviour
     //variables containing active and uppcoming players
     private int nextPlayer;
     private int currentPlayer;
-    private int playerLoss;
-    //time from player finishing turn to when they actually finish (dont go out for dropping block)
-    public float timeBetweenTurns;
 
     //determines if each player is still in or out
-    private bool oneOut = false;
-    private bool twoOut = false;
-    private bool threeOut = false;
-    private bool fourOut = false;
+    public bool oneOut = false;
+    public bool twoOut = false;
+    public bool threeOut = false;
+    public bool fourOut = false;
+
+    private bool setup = true;
 
     //leaderboards array
     public string[] leaderboard = new string[4];
@@ -26,6 +25,8 @@ public class FourPlayerStructure : MonoBehaviour
     [SerializeField] private GameObject leaderboardScreen;
     [SerializeField] private GameObject[] leaderboardPositions;
     private Vector2 leaderboardLocation;
+
+    public GameObject ground;
 
     //spawn platform for blocks
     [SerializeField] private GameObject platform;
@@ -44,8 +45,16 @@ public class FourPlayerStructure : MonoBehaviour
     //UI elements and positions
     [SerializeField] private GameObject readyScreen;
     [SerializeField] private GameObject finishButton;
+
+    //testing if there is still movement
+    private bool stillMovement = false;
+    private GameObject[] blocksVelocity;
+
+    //screen positions
     private Vector2 screenPosition;
     private Vector2 buttonPosition;
+
+    private Color[] colours = new Color[4];
 
     public void Start()
     {
@@ -55,14 +64,9 @@ public class FourPlayerStructure : MonoBehaviour
         buttonPosition = finishButton.GetComponent<Transform>().position;
         leaderboardLocation = leaderboardScreen.GetComponent<Transform>().position;
 
-        //sets player 1 to begin
-        currentPlayer = 1;
-        playerLoss = 1;
-        nextPlayer = 1;
         //puts UI elements into position
-        readyScreen.GetComponent<Transform>().position = screenPosition;
-        finishButton.GetComponent<Transform>().position = new Vector2(0f, 20f);
-        leaderboardScreen.GetComponent<RectTransform>().position = new Vector2(0f, 20f);
+        finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100 , finishButton.GetComponent<Transform>().position.y);
+        leaderboardScreen.GetComponent<RectTransform>().position = new Vector2(leaderboardLocation.x + 100, leaderboardScreen.GetComponent<RectTransform>().position.y);
 
         //set all block values;
 
@@ -85,11 +89,68 @@ public class FourPlayerStructure : MonoBehaviour
         blocks[3, 1] = circles[1];
         blocks[3, 2] = circles[2];
         blocks[3, 3] = circles[3];
+
+        //set colours
+        colours[0] = new Color(222f/255f, 233f/255f, 48f/255f); //yellow
+        colours[1] = new Color(65f/255f, 48f/255f, 233f/255f); //blue
+        colours[2] = new Color(65f/255f, 233f/255f, 48f/255f); //green
+        colours[3] = new Color(233f/255f, 48f/255f, 48f/255f); //red
+
+        //if player 3 / 4 out (2/3 player game), put them out straight away
+        if(threeOut)
+        {
+            currentPlayer = 3;
+            PlayerOut();
+        }
+        if (fourOut)
+        {
+            currentPlayer = 4;
+            PlayerOut();
+        }
+
+        //sets player 1 to begin
+        currentPlayer = 1;
+        nextPlayer = 1;
+
+        //finish setup
+        setup = false;
+
     }
 
+    private void Update()
+    {
+        //test for all blocks if they are moving
+        blocksVelocity = GameObject.FindGameObjectsWithTag("block");
+
+        //tests all blocks if they are moving
+        for (int i = 0; i < blocksVelocity.Length; i++)
+        {
+            if(blocksVelocity[i].GetComponent<Rigidbody2D>().velocity.magnitude > 0f)
+            {
+                stillMovement = true;
+                i = blocksVelocity.Length;
+                Debug.Log("moving");
+            }
+            else
+            {
+                stillMovement = false;
+            }
+        }
+        //if block is moving or being dragged or hasnt even been moved yet, dont allow button to be pressed
+        if (stillMovement || GetComponent<DragAndDrop>().IsItDragging() == true || GetComponent<DragAndDrop>().IsItMoved() == false)
+        {
+            finishButton.GetComponent<Button>().interactable = false;
+        }
+        //if there is no movement, let it finish turn
+        else if(!stillMovement)
+        {
+            finishButton.GetComponent<Button>().interactable = true;
+        }
+    }
     //begins players turn
     public void NextTurn()
     {
+        GetComponent<AudioSource>().Play();
         switch(nextPlayer)
         {
             case 1:
@@ -106,38 +167,72 @@ public class FourPlayerStructure : MonoBehaviour
                 break;
         }
         //puts UI elements in place
-        readyScreen.GetComponent<Transform>().position = new Vector2(0f, 20f);
-        finishButton.GetComponent<Transform>().position = buttonPosition;
+        readyScreen.GetComponent<Transform>().position = new Vector2(screenPosition.x + 100, readyScreen.GetComponent<Transform>().position.y);
+        finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x, finishButton.GetComponent<Transform>().position.y);
+        readyScreen.GetComponentInChildren<Button>().interactable = true;
+        //reset if block has been moved
+        GetComponent<DragAndDrop>().ResetMoved();
+        //Start detecting for a failure
+        ground.GetComponent<BlockDetector>().SetDetecting();
     }
 
     //finished turn 
     public void EndTurn()
     {
         //sets UI in place
-        readyScreen.GetComponent<Transform>().position = screenPosition;
-        finishButton.GetComponent<Transform>().position = new Vector2(0f, 20f);
+        readyScreen.GetComponent<Transform>().position = new Vector2(screenPosition.x, readyScreen.GetComponent<Transform>().position.y);
+        finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100, finishButton.GetComponent<Transform>().position.y);
 
         switch(nextPlayer)
         {
             case 1:
-                readyScreen.GetComponentInChildren<Text>().text = "Player 1\nTap when ready...";
+                if(!oneOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 1\nTap when ready...";
+                else if (!twoOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 2\nTap when ready...";
+                else if (!threeOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 3\nTap when ready...";
+                else if (!fourOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 4\nTap when ready...";
                 break;
 
             case 2:
-                readyScreen.GetComponentInChildren<Text>().text = "Player 2\nTap when ready...";
+                if (!twoOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 2\nTap when ready...";
+                else if (!threeOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 3\nTap when ready...";
+                else if (!fourOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 4\nTap when ready...";
+                else if (!oneOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 1\nTap when ready...";
                 break;
 
             case 3:
-                readyScreen.GetComponentInChildren<Text>().text = "Player 3\nTap when ready...";
+                if (!threeOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 3\nTap when ready...";
+                else if (!fourOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 4\nTap when ready...";
+                else if (!oneOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 1\nTap when ready...";
+                else if (!twoOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 2\nTap when ready...";
                 break;
 
             case 4:
-                readyScreen.GetComponentInChildren<Text>().text = "Player 4\nTap when ready...";
+                if (!fourOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 4\nTap when ready...";
+                else if (!oneOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 1\nTap when ready...";
+                else if (!twoOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 2\nTap when ready...";
+                else if (!threeOut)
+                    readyScreen.GetComponentInChildren<Text>().text = "Player 3\nTap when ready...";
                 break;
         }
+
+        //disable dragging off block
         GetComponent<DisableDragging>().Disable();
 
-        //REMOVE COMPONENT OF ALL DRAG AND DROP
     }
 
     //player 1 turn
@@ -147,8 +242,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 1;
             nextPlayer = 2;
-            Invoke("SwitchPlayerLoss", timeBetweenTurns);
-            Instantiate(blocks[shapeValue, 0], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y + 2), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 0], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
             playerText[0].GetComponent<Animator>().Play("Player1Active");
         }
         else
@@ -163,8 +257,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 2;
             nextPlayer = 3;
-            Invoke("SwitchPlayerLoss", timeBetweenTurns);
-            Instantiate(blocks[shapeValue, 1], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y + 2), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 1], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
             playerText[1].GetComponent<Animator>().Play("Player2Active");
         }
         else
@@ -179,8 +272,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 3;
             nextPlayer = 4;
-            Invoke("SwitchPlayerLoss", timeBetweenTurns);
-            Instantiate(blocks[shapeValue, 2], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y + 2), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 2], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
             playerText[2].GetComponent<Animator>().Play("Player3Active");
         }
         else
@@ -195,24 +287,29 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 4;
             nextPlayer = 1;
-            Invoke("SwitchPlayerLoss", timeBetweenTurns);
-            Instantiate(blocks[shapeValue, 3], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y + 2), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 3], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
             playerText[3].GetComponent<Animator>().Play("Player4Active");
+
+            //changes what shape is used in next round
+            shapeValue++;
+            if (shapeValue == 4)
+                shapeValue = 0;
         }
         else
         {
+
+            //changes what shape is used in next round
+            shapeValue++;
+            if (shapeValue == 4)
+                shapeValue = 0;
+
             Player1();
         }
-
-        //changes what shape is used in next round
-        shapeValue++;
-        if (shapeValue == 4)
-            shapeValue = 0;
     }
     //player goes out function
     public void PlayerOut()
     {
-        switch (playerLoss)
+        switch (currentPlayer)
         {
             case 1:
                 {
@@ -246,7 +343,7 @@ public class FourPlayerStructure : MonoBehaviour
 
         outPosition--;
         Debug.Log(outPosition);
-
+        //if 3 players are out, set leaderboard positions
         if(outPosition < 1)
         {
             if(!oneOut)
@@ -260,28 +357,94 @@ public class FourPlayerStructure : MonoBehaviour
 
             EndGame();
         }
-        else
+        else if(!setup)
         {
-            EndTurn();
+            Invoke("EndTurn", 1f);
         }
-    }
-
-    public void SwitchPlayerLoss()
-    {
-        playerLoss = currentPlayer;
     }
     
     //end the game
     public void EndGame()
     {
         //make it play sound
-        leaderboardScreen.GetComponent<RectTransform>().position = leaderboardLocation;
-        finishButton.GetComponent<Transform>().position = new Vector2(0f, 20f);
-
+        leaderboardScreen.GetComponent<RectTransform>().position = new Vector2(leaderboardLocation.x, leaderboardScreen.GetComponent<RectTransform>().position.y);
+        finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100, finishButton.GetComponent<Transform>().position.y);
+        //set leaderboards
         leaderboardPositions[0].GetComponent<Text>().text = leaderboard[0];
         leaderboardPositions[1].GetComponent<Text>().text = leaderboard[1];
         leaderboardPositions[2].GetComponent<Text>().text = leaderboard[2];
         leaderboardPositions[3].GetComponent<Text>().text = leaderboard[3];
-        Debug.Log("end game");
+        //set colours
+        //1st
+        if(leaderboard[0] == "Player 1")
+        {
+            leaderboardPositions[0].GetComponent<Text>().color = colours[0];
+        }
+        else if (leaderboard[0] == "Player 2")
+        {
+            leaderboardPositions[0].GetComponent<Text>().color = colours[1];
+        }
+        else if (leaderboard[0] == "Player 3")
+        {
+            leaderboardPositions[0].GetComponent<Text>().color = colours[2];
+        }
+        else if (leaderboard[0] == "Player 4")
+        {
+            leaderboardPositions[0].GetComponent<Text>().color = colours[3];
+        }
+
+        //2nd
+        if (leaderboard[1] == "Player 1")
+        {
+            leaderboardPositions[1].GetComponent<Text>().color = colours[0];
+        }
+        else if (leaderboard[1] == "Player 2")
+        {
+            leaderboardPositions[1].GetComponent<Text>().color = colours[1];
+        }
+        else if (leaderboard[1] == "Player 3")
+        {
+            leaderboardPositions[1].GetComponent<Text>().color = colours[2];
+        }
+        else if (leaderboard[1] == "Player 4")
+        {
+            leaderboardPositions[1].GetComponent<Text>().color = colours[3];
+        }
+
+        //3rd
+        if (leaderboard[2] == "Player 1")
+        {
+            leaderboardPositions[2].GetComponent<Text>().color = colours[0];
+        }
+        else if (leaderboard[2] == "Player 2")
+        {
+            leaderboardPositions[2].GetComponent<Text>().color = colours[1];
+        }
+        else if (leaderboard[2] == "Player 3")
+        {
+            leaderboardPositions[2].GetComponent<Text>().color = colours[2];
+        }
+        else if (leaderboard[2] == "Player 4")
+        {
+            leaderboardPositions[2].GetComponent<Text>().color = colours[3];
+        }
+
+        //4th
+        if (leaderboard[3] == "Player 1")
+        {
+            leaderboardPositions[3].GetComponent<Text>().color = colours[0];
+        }
+        else if (leaderboard[3] == "Player 2")
+        {
+            leaderboardPositions[3].GetComponent<Text>().color = colours[1];
+        }
+        else if (leaderboard[3] == "Player 3")
+        {
+            leaderboardPositions[3].GetComponent<Text>().color = colours[2];
+        }
+        else if (leaderboard[3] == "Player 4")
+        {
+            leaderboardPositions[3].GetComponent<Text>().color = colours[3];
+        }
     }
 } 

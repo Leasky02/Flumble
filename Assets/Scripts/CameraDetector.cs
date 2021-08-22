@@ -5,17 +5,26 @@ using UnityEngine;
 public class CameraDetector : MonoBehaviour
 {
     public string cameraType;
-    public GameObject character;
+    public GameObject cameraObject;
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("player"))
+        if(collision.CompareTag("block"))
         {
-            if (cameraType == "down")
-                character.GetComponent<CameraMovement>().MoveCamDown();
+            if (collision.GetComponent<DragAndDrop>().active == true)
+            {
+                if (cameraType == "down")
+                    cameraObject.GetComponent<CameraMovement>().MoveCamDown();
 
-            if (cameraType == "up")
-                character.GetComponent<CameraMovement>().MoveCamUp();
+                if (cameraType == "up")
+                    cameraObject.GetComponent<CameraMovement>().MoveCamUp();
+
+                if (cameraType == "left")
+                    cameraObject.GetComponent<CameraMovement>().MoveCamLeft();
+
+                if (cameraType == "right")
+                    cameraObject.GetComponent<CameraMovement>().MoveCamRight();
+            }
         }
     }
 }
