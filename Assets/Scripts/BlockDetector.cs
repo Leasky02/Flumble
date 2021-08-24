@@ -16,6 +16,7 @@ public class BlockDetector : MonoBehaviour
                 //play audio
                 GetComponent<AudioSource>().clip = audioClip;
                 GetComponent<AudioSource>().Play();
+                collision.collider.GetComponent<ParticleSystem>().Play();
 
                 //call player out
                 gameManager.GetComponent<FourPlayerStructure>().PlayerOut();
@@ -27,7 +28,7 @@ public class BlockDetector : MonoBehaviour
             collision.collider.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
             collision.collider.GetComponent<ParticleSystem>().Play();
             //destroy object
-            Destroy(collision.collider, 0.4f);
+            Destroy(collision.collider);
         }
     }
 

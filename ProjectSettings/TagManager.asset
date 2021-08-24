@@ -9,6 +9,8 @@ TagManager:
   - player
   - active
   - slider
+  - delete
+  - cloud
   layers:
   - Default
   - TransparentFX

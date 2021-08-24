@@ -11,7 +11,7 @@ public class CameraDetector : MonoBehaviour
     {
         if(collision.CompareTag("block"))
         {
-            if (collision.GetComponent<DragAndDrop>().active == true)
+            if(collision.GetComponent<DragAndDrop>().useable)
             {
                 if (cameraType == "down")
                     cameraObject.GetComponent<CameraMovement>().MoveCamDown();

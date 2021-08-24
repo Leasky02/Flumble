@@ -50,6 +50,9 @@ public class FourPlayerStructure : MonoBehaviour
     private bool stillMovement = false;
     private GameObject[] blocksVelocity;
 
+    //if turn is over
+    private bool turnOver = false;
+
     //screen positions
     private Vector2 screenPosition;
     private Vector2 buttonPosition;
@@ -137,7 +140,7 @@ public class FourPlayerStructure : MonoBehaviour
             }
         }
         //if block is moving or being dragged or hasnt even been moved yet, dont allow button to be pressed
-        if (stillMovement || GetComponent<DragAndDrop>().IsItDragging() == true || GetComponent<DragAndDrop>().IsItMoved() == false)
+        if (stillMovement || GetComponent<DragAndDrop>().IsItDragging() == true || GetComponent<DragAndDrop>().IsItMoved() == false || turnOver)
         {
             finishButton.GetComponent<Button>().interactable = false;
         }
@@ -150,6 +153,7 @@ public class FourPlayerStructure : MonoBehaviour
     //begins players turn
     public void NextTurn()
     {
+        turnOver = false;
         GetComponent<AudioSource>().Play();
         switch(nextPlayer)
         {
@@ -309,6 +313,12 @@ public class FourPlayerStructure : MonoBehaviour
     //player goes out function
     public void PlayerOut()
     {
+        //disable dragging
+        GetComponent<DisableDragging>().Disable();
+        //finish turn button cant be pressed
+        turnOver = true;
+        finishButton.GetComponent<Button>().interactable = false;
+
         switch (currentPlayer)
         {
             case 1:
@@ -359,7 +369,7 @@ public class FourPlayerStructure : MonoBehaviour
         }
         else if(!setup)
         {
-            Invoke("EndTurn", 1f);
+            Invoke("EndTurn", 1.5f);
         }
     }
     

@@ -17,8 +17,15 @@ public class DragAndDrop : MonoBehaviour
 
     //variable that contains if an object is being dragged
     static bool dragging;
-
+    //if script should be used
     public bool useable = true;
+
+    //if it is released
+    private bool released = false;
+
+    //bin audio clip
+    [SerializeField] private AudioClip binSound;
+
 
 
 
@@ -29,6 +36,11 @@ public class DragAndDrop : MonoBehaviour
         {
             GetComponent<Transform>().localScale = new Vector2(size, size);
             if(!unusable)
+                GetComponent<Rigidbody2D>().gravityScale = 5;
+        }
+        else if (currentScene == ("Main Menu"))
+        {
+            if (!unusable)
                 GetComponent<Rigidbody2D>().gravityScale = 5;
         }
         else
@@ -48,6 +60,7 @@ public class DragAndDrop : MonoBehaviour
             active = true;
             moved = true;
             GetComponent<Rigidbody2D>().gravityScale = 5;
+            released = false;
         }
     }
     //when the mouse is released on the object
@@ -59,6 +72,8 @@ public class DragAndDrop : MonoBehaviour
             dragging = false;
             active = false;
             GetComponent<Rigidbody2D>().gravityScale = 5;
+            released = true;
+            Invoke("SetReleased", 0.1f);
         }
     }
 
@@ -73,6 +88,21 @@ public class DragAndDrop : MonoBehaviour
                 //move the object towards the position of the mouse / screen touch
                 Vector3 mouseposition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 GetComponent<Rigidbody2D>().MovePosition(mouseposition);
+            }
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("delete"))
+        {
+            if (released)
+            {
+                GetComponent<SpriteRenderer>().enabled = false;
+                Destroy(gameObject.GetComponent<BoxCollider2D>());
+                GetComponent<AudioSource>().clip = binSound;
+                GetComponent<AudioSource>().Play();
+                Destroy(gameObject, 0.5f);
             }
         }
     }
@@ -99,5 +129,10 @@ public class DragAndDrop : MonoBehaviour
     public void SetSize(float sizeValue)
     {
         size = sizeValue;
+    }
+
+    public void SetReleased()
+    {
+        released = false;
     }
 }
