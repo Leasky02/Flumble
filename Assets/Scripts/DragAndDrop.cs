@@ -23,11 +23,27 @@ public class DragAndDrop : MonoBehaviour
     //if it is released
     private bool released = false;
 
+    //object containing colour blind more
+    [SerializeField] private GameObject colourBlindText;
+
     //bin audio clip
     [SerializeField] private AudioClip binSound;
 
+    //colourblind
+    public static bool colourBlindMode;
 
 
+    private void Awake()
+    {
+        if (PlayerPrefs.GetInt("colourBlindMode") == 0)
+        {
+            colourBlindMode = false;
+        }
+        else if (PlayerPrefs.GetInt("colourBlindMode") == 1)
+        {
+            colourBlindMode = true;
+        }
+    }
 
     private void Start()
     {
@@ -42,6 +58,7 @@ public class DragAndDrop : MonoBehaviour
         {
             if (!unusable)
                 GetComponent<Rigidbody2D>().gravityScale = 5;
+                useable = false;
         }
         else
         {
@@ -49,7 +66,25 @@ public class DragAndDrop : MonoBehaviour
             GetComponent<Transform>().localScale = new Vector2(randomScale, randomScale);
         }
 
-
+        //test if colour blind mode is on
+        if (currentScene != ("1 Player") && currentScene != ("Free Play") && currentScene != ("Main Menu"))
+        {
+            if (!unusable)
+            {
+                //if colour blind mode is on, set number to true
+                if (colourBlindMode == true)
+                {
+                    //Debug.Log(colourBlindMode);
+                    colourBlindText.GetComponent<SpriteRenderer>().enabled = true;
+                    //Debug.Log("true");
+                }
+                else
+                {
+                    colourBlindText.GetComponent<SpriteRenderer>().enabled = false;
+                    //Debug.Log("false");
+                }
+            }
+        }
     }
     private void OnMouseDown()
     {
@@ -105,11 +140,18 @@ public class DragAndDrop : MonoBehaviour
                 Destroy(gameObject, 0.5f);
             }
         }
+
+        if (collision.CompareTag("ground"))
+        {
+            //Debug.Log("hit");
+            colourBlindText.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
 
     public void UnDraggable()
     {
         useable = false;
+        colourBlindText.GetComponent<SpriteRenderer>().enabled = false;
     }
     public bool IsItDragging()
     {
@@ -134,5 +176,21 @@ public class DragAndDrop : MonoBehaviour
     public void SetReleased()
     {
         released = false;
+    }
+
+
+    public void ChangeColourBlindMode(bool mode)
+    {
+        colourBlindMode = mode;
+        Debug.Log(mode);
+        if (!mode)
+            PlayerPrefs.SetInt("colourBlindMode", 0);
+        if (mode)
+            PlayerPrefs.SetInt("colourBlindMode", 1);
+    }
+
+    public bool ReturnMode()
+    {
+        return colourBlindMode;
     }
 }

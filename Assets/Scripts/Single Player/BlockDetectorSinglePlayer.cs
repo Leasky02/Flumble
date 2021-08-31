@@ -11,6 +11,8 @@ public class BlockDetectorSinglePlayer : MonoBehaviour
     {
         if (collision.collider.CompareTag("block"))
         {
+            //destroy object
+            Destroy(collision.collider, 0.4f);
             if (detecting)
             {
                 //play audio
@@ -25,8 +27,6 @@ public class BlockDetectorSinglePlayer : MonoBehaviour
             //play particles
             collision.collider.GetComponent<SpriteRenderer>().enabled = false;
             collision.collider.GetComponent<ParticleSystem>().Play();
-            //destroy object
-            Destroy(collision.collider, 0.4f);
 
         }
     }

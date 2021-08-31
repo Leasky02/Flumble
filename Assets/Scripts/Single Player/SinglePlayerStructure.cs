@@ -9,8 +9,11 @@ public class SinglePlayerStructure : MonoBehaviour
 
     //spawn platform for blocks
     [SerializeField] private GameObject platform;
+
+    [SerializeField] private GameObject highscoreManager;
     //start screen
     [SerializeField] private GameObject startScreen;
+    [SerializeField] private GameObject exitButton;
     //end screen
     [SerializeField] private GameObject EndScreen;
     [SerializeField] private GameObject heightReached;
@@ -19,6 +22,8 @@ public class SinglePlayerStructure : MonoBehaviour
     //end screen positioin
     private Vector2 endScreenPosition;
     private Vector2 finishButtonPosition;
+    private Vector2 exitButtonPosition;
+    private Vector2 redoObjectPosition;
 
     //all shapes in arrays
     [SerializeField] private GameObject[,] blocks = new GameObject[4, 4];
@@ -41,6 +46,13 @@ public class SinglePlayerStructure : MonoBehaviour
     //testing if there is still movement
     private bool stillMovement = false;
     private GameObject[] blocksVelocity;
+
+    //holds data of how many redo shapes are left
+    private int redos = 3;
+
+    [SerializeField] private GameObject redoButton;
+    [SerializeField] private GameObject redoObject;
+    [SerializeField] private GameObject redoText;
 
     public void Start()
     {
@@ -71,9 +83,13 @@ public class SinglePlayerStructure : MonoBehaviour
         //set UI element positions
         endScreenPosition = EndScreen.GetComponent<RectTransform>().position;
         EndScreen.GetComponent<RectTransform>().position = new Vector2(endScreenPosition.x + 100, endScreenPosition.y);
+        exitButtonPosition = exitButton.GetComponent<Transform>().position;
 
         finishButtonPosition = finishButton.GetComponent<RectTransform>().position;
+        redoObjectPosition = redoObject.GetComponent<RectTransform>().position;
+        exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x + 100, exitButton.GetComponent<Transform>().position.y);
         finishButton.GetComponent<RectTransform>().position = new Vector2(finishButtonPosition.x + 100, finishButtonPosition.y);
+        redoObject.GetComponent<RectTransform>().position = new Vector2(redoObjectPosition.x + 100, redoObjectPosition.y);
     }
 
     private void Update()
@@ -109,6 +125,7 @@ public class SinglePlayerStructure : MonoBehaviour
     public void Begin()
     {
         finishButton.GetComponent<RectTransform>().position = new Vector2(finishButtonPosition.x, finishButtonPosition.y);
+        redoObject.GetComponent<RectTransform>().position = new Vector2(redoObjectPosition.x, redoObjectPosition.y);
         startScreen.GetComponent<RectTransform>().position = new Vector2(startScreen.GetComponent<RectTransform>().position.x + 100, startScreen.GetComponent<RectTransform>().position.y);
         NextTurn();
     }
@@ -120,18 +137,18 @@ public class SinglePlayerStructure : MonoBehaviour
         {
             if (blocksVelocity[i].GetComponent<Transform>().position.y + 2.5f > maxHeight)
             {
-                maxHeight = blocksVelocity[i].GetComponent<Transform>().position.y + 2.5f;
+                maxHeight = (blocksVelocity[i].GetComponent<Transform>().position.y + 2.5f) * 6;
             }
         }
-        Debug.Log(maxHeight);
         blockTotal++;
         //reset scripts
         GetComponent<DisableDragging>().Disable();
         GetComponent<DragAndDrop>().ResetMoved();
         ground.GetComponent<BlockDetectorSinglePlayer>().SetDetecting();
 
-        //ADD SET HEIGHT REACHED AND ADD TO BLOCKS PLACED
         Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+
+        exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x, exitButton.GetComponent<Transform>().position.y);
 
         colourValue++;
         if (colourValue > 3)
@@ -139,15 +156,55 @@ public class SinglePlayerStructure : MonoBehaviour
         shapeValue = Random.Range(0, 4);
     }
 
+    public void RedoShape()
+    {
+        if(redos > 0)
+        {
+            for (int i = 0; i < blocksVelocity.Length; i++)
+            {
+                if (blocksVelocity[i].GetComponent<DragAndDrop>().useable == true)
+                {
+                    Destroy(blocksVelocity[i]);
+                    i = blocksVelocity.Length;
+                }
+            }
+            redos--;
+            redoText.GetComponent<Text>().text = ("" + redos);
+
+            //redo shape
+            shapeValue++;
+            if (shapeValue > 3)
+                shapeValue = 0;
+            Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+            GetComponent<AudioSource>().Play();
+
+            colourValue++;
+            if (colourValue > 3)
+                colourValue = 0;
+            shapeValue = Random.Range(0, 4);
+        }
+        
+        if(redos == 0)
+        {
+            redoButton.GetComponent<Button>().interactable = false;
+            redoText.GetComponent<Text>().text = ("" + redos);
+        }
+    }
 
     public void EndGame()
     {
         EndScreen.GetComponent<RectTransform>().position = new Vector2(endScreenPosition.x, EndScreen.GetComponent<RectTransform>().position.y);
+        redoObject.GetComponent<RectTransform>().position = new Vector2(redoObjectPosition.x + 100, redoObjectPosition.y);
         finishButton.GetComponent<RectTransform>().position = new Vector2(finishButtonPosition.x + 100, finishButton.GetComponent<RectTransform>().position.y);
+        exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x + 100, exitButton.GetComponent<Transform>().position.y);
 
         maxHeight = Mathf.Round(maxHeight * 10.0f) * 0.1f;
         heightReached.GetComponent<Text>().text = ("" + maxHeight + "m");
         blocksPlaced.GetComponent<Text>().text = ("" + blockTotal);
+
+        //check high scores
+        highscoreManager.GetComponent<HighScoreManager>().CheckBlocks(blockTotal);
+        highscoreManager.GetComponent<HighScoreManager>().CheckHeight(maxHeight);
     }
 }
 

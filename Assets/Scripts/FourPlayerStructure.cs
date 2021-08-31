@@ -45,6 +45,7 @@ public class FourPlayerStructure : MonoBehaviour
     //UI elements and positions
     [SerializeField] private GameObject readyScreen;
     [SerializeField] private GameObject finishButton;
+    [SerializeField] private GameObject exitButton;
 
     //testing if there is still movement
     private bool stillMovement = false;
@@ -56,6 +57,7 @@ public class FourPlayerStructure : MonoBehaviour
     //screen positions
     private Vector2 screenPosition;
     private Vector2 buttonPosition;
+    private Vector2 exitButtonPosition;
 
     private Color[] colours = new Color[4];
 
@@ -65,10 +67,12 @@ public class FourPlayerStructure : MonoBehaviour
         //saves position that elements start in
         screenPosition = readyScreen.GetComponent<Transform>().position;
         buttonPosition = finishButton.GetComponent<Transform>().position;
+        exitButtonPosition = exitButton.GetComponent<Transform>().position;
         leaderboardLocation = leaderboardScreen.GetComponent<Transform>().position;
 
         //puts UI elements into position
         finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100 , finishButton.GetComponent<Transform>().position.y);
+        exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x + 100 , exitButton.GetComponent<Transform>().position.y);
         leaderboardScreen.GetComponent<RectTransform>().position = new Vector2(leaderboardLocation.x + 100, leaderboardScreen.GetComponent<RectTransform>().position.y);
 
         //set all block values;
@@ -132,7 +136,6 @@ public class FourPlayerStructure : MonoBehaviour
             {
                 stillMovement = true;
                 i = blocksVelocity.Length;
-                Debug.Log("moving");
             }
             else
             {
@@ -173,6 +176,7 @@ public class FourPlayerStructure : MonoBehaviour
         //puts UI elements in place
         readyScreen.GetComponent<Transform>().position = new Vector2(screenPosition.x + 100, readyScreen.GetComponent<Transform>().position.y);
         finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x, finishButton.GetComponent<Transform>().position.y);
+        exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x, exitButton.GetComponent<Transform>().position.y);
         readyScreen.GetComponentInChildren<Button>().interactable = true;
         //reset if block has been moved
         GetComponent<DragAndDrop>().ResetMoved();
@@ -186,8 +190,9 @@ public class FourPlayerStructure : MonoBehaviour
         //sets UI in place
         readyScreen.GetComponent<Transform>().position = new Vector2(screenPosition.x, readyScreen.GetComponent<Transform>().position.y);
         finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100, finishButton.GetComponent<Transform>().position.y);
+        exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x + 100, exitButton.GetComponent<Transform>().position.y);
 
-        switch(nextPlayer)
+        switch (nextPlayer)
         {
             case 1:
                 if(!oneOut)
@@ -352,7 +357,6 @@ public class FourPlayerStructure : MonoBehaviour
         }
 
         outPosition--;
-        Debug.Log(outPosition);
         //if 3 players are out, set leaderboard positions
         if(outPosition < 1)
         {
@@ -377,6 +381,7 @@ public class FourPlayerStructure : MonoBehaviour
     public void EndGame()
     {
         //make it play sound
+        exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x + 100, exitButton.GetComponent<Transform>().position.y);
         leaderboardScreen.GetComponent<RectTransform>().position = new Vector2(leaderboardLocation.x, leaderboardScreen.GetComponent<RectTransform>().position.y);
         finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100, finishButton.GetComponent<Transform>().position.y);
         //set leaderboards

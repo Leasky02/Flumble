@@ -11,6 +11,9 @@ TagManager:
   - slider
   - delete
   - cloud
+  - dontDestroy
+  - music
+  - colour blind
   layers:
   - Default
   - TransparentFX

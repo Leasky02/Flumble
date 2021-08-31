@@ -29,7 +29,7 @@ public class CloudSetup : MonoBehaviour
 
         //sets sprite random
         randomSprite = Random.Range(0, 3);
-        switch(cloudClass)
+        switch (cloudClass)
         {
             case 1:
                 ClassOne();
@@ -67,8 +67,6 @@ public class CloudSetup : MonoBehaviour
         speed = 0.3f;
         //sets alpha value
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.9f);
-
-        Debug.Log("class one");
     }
 
     public void ClassTwo()
@@ -77,8 +75,6 @@ public class CloudSetup : MonoBehaviour
         speed = 0.2f;
         //sets alpha value
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.6f);
-
-        Debug.Log("class two");
     }
 
     public void ClassThree()
@@ -87,13 +83,11 @@ public class CloudSetup : MonoBehaviour
         speed = 0.1f;
         //sets alpha value
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.3f);
-
-        Debug.Log("class three");
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.CompareTag("cloud"))
+        if (collision.CompareTag("cloud"))
         {
             GetComponent<Transform>().position = new Vector2(x_Parameters[0].GetComponent<Transform>().position.x, GetComponent<Transform>().position.y);
         }

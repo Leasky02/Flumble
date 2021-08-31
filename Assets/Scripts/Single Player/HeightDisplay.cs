@@ -21,6 +21,6 @@ public class HeightDisplay : MonoBehaviour
     {
         yPos = GetComponent<Transform>().position.y;
         yPos = Mathf.Round((yPos) * 10.0f) * 0.1f;
-        text.text = ("View Height: " + yPos + "m");
+        text.text = ("View Height: " + yPos * 6 + "m");
     }
 }
