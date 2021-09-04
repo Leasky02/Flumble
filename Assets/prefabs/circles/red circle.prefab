@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4056470092627519806}
   - component: {fileID: 9029350886259336725}
   - component: {fileID: -8759559652907206129}
-  - component: {fileID: 3245500328567379073}
+  - component: {fileID: 2027169922716448477}
   m_Layer: 0
   m_Name: red circle
   m_TagString: block
@@ -227,12 +227,12 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 1.2867963
+  m_Mass: 1
   m_LinearDrag: 4
   m_AngularDrag: 10
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -4958,8 +4958,8 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!58 &3245500328567379073
-CircleCollider2D:
+--- !u!60 &2027169922716448477
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4972,8 +4972,38 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 2
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 4, y: 4}
+    newSize: {x: 1.28, y: 1.28}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 2, y: -0.65625}
+      - {x: 2, y: 0.59375}
+      - {x: 1.875, y: 0.9375}
+      - {x: 1.375, y: 1.5625}
+      - {x: 1.125, y: 1.71875}
+      - {x: 0.53125, y: 2}
+      - {x: -0.53125, y: 2}
+      - {x: -1.1875, y: 1.6875}
+      - {x: -1.6875, y: 1.1875}
+      - {x: -1.90625, y: 0.6875}
+      - {x: -2, y: 0.4375}
+      - {x: -2, y: -0.5}
+      - {x: -1.875, y: -0.90625}
+      - {x: -1.53125, y: -1.375}
+      - {x: -1.1875, y: -1.6875}
+      - {x: -0.875, y: -1.90625}
+      - {x: -0.5, y: -2}
+      - {x: 0.59375, y: -2}
+      - {x: 0.75, y: -1.96875}
+      - {x: 1.375, y: -1.59375}
+      - {x: 1.71875, y: -1.21875}
 --- !u!1 &4332676430697790384
 GameObject:
   m_ObjectHideFlags: 0

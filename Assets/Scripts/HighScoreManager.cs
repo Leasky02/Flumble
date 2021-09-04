@@ -12,6 +12,10 @@ public class HighScoreManager : MonoBehaviour
     [SerializeField] private GameObject blocksPlacedDisplay;
 
     [SerializeField] private bool displayHighscore;
+
+    [SerializeField] private GameObject highScoreText;
+    [SerializeField] private GameObject blocksPlacedScore;
+    [SerializeField] private GameObject heightScore;
     // Start is called before the first frame update
     void Awake()
     {
@@ -41,6 +45,8 @@ public class HighScoreManager : MonoBehaviour
         {
             heightRecord = height;
             PlayerPrefs.SetFloat("heightRecord", heightRecord);
+            highScoreText.GetComponent<Text>().enabled = true;
+            heightScore.GetComponent<Text>().color = new Color(130f/255f , 231f/255f , 130f/255f, 1f);
             //set player pref
         }
     }
@@ -51,6 +57,8 @@ public class HighScoreManager : MonoBehaviour
         {
             blocksPlacedRecord = blocks;
             PlayerPrefs.SetInt("blocksPlacedRecord", blocksPlacedRecord);
+            highScoreText.GetComponent<Text>().enabled = true;
+            blocksPlacedScore.GetComponent<Text>().color = new Color(130f / 255f, 231f / 255f, 130f / 255f, 1f);
         }
     }
 }

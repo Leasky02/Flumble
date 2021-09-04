@@ -121,7 +121,7 @@ public class DragAndDrop : MonoBehaviour
             if(!unusable && usingThisObject)
             {
                 //move the object towards the position of the mouse / screen touch
-                Vector3 mouseposition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 mouseposition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
                 GetComponent<Rigidbody2D>().MovePosition(mouseposition);
             }
         }
@@ -182,7 +182,7 @@ public class DragAndDrop : MonoBehaviour
     public void ChangeColourBlindMode(bool mode)
     {
         colourBlindMode = mode;
-        Debug.Log(mode);
+        //Debug.Log(mode);
         if (!mode)
             PlayerPrefs.SetInt("colourBlindMode", 0);
         if (mode)

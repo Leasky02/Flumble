@@ -32,9 +32,16 @@ public class SinglePlayerStructure : MonoBehaviour
     [SerializeField] private GameObject[] triangles;
     [SerializeField] private GameObject[] circles;
 
+    //redo button ad sprite
+    [SerializeField] private Sprite adSprite;
+    [SerializeField] private Sprite redoSprite;
+
+    //ad manager
+    [SerializeField] private GameObject adsManager;
+
     //contains what shapes to use
     private int shapeValue = 0;
-    private int colourValue = 0;
+    private int colourValue = 3;
 
     //scores
     private int blockTotal = -1;
@@ -132,6 +139,11 @@ public class SinglePlayerStructure : MonoBehaviour
 
     public void NextTurn()
     {
+        colourValue++;
+        if (colourValue > 3)
+            colourValue = 0;
+
+        shapeValue = Random.Range(0, 4);
         GetComponent<AudioSource>().Play();
         for (int i = 0; i < blocksVelocity.Length; i++)
         {
@@ -149,16 +161,12 @@ public class SinglePlayerStructure : MonoBehaviour
         Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
 
         exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x, exitButton.GetComponent<Transform>().position.y);
-
-        colourValue++;
-        if (colourValue > 3)
-            colourValue = 0;
-        shapeValue = Random.Range(0, 4);
     }
 
     public void RedoShape()
     {
-        if(redos > 0)
+        redos--;
+        if (redos > 0)
         {
             for (int i = 0; i < blocksVelocity.Length; i++)
             {
@@ -168,27 +176,75 @@ public class SinglePlayerStructure : MonoBehaviour
                     i = blocksVelocity.Length;
                 }
             }
-            redos--;
             redoText.GetComponent<Text>().text = ("" + redos);
 
             //redo shape
-            shapeValue++;
-            if (shapeValue > 3)
-                shapeValue = 0;
+            int currentShapeValue = shapeValue;
+            do
+            {
+                shapeValue = Random.Range(0, 4);
+            } while (shapeValue == currentShapeValue);
+
+            Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+            GetComponent<AudioSource>().Play();
+        }else if(redos == 0)
+        {
+            for (int i = 0; i < blocksVelocity.Length; i++)
+            {
+                if (blocksVelocity[i].GetComponent<DragAndDrop>().useable == true)
+                {
+                    Destroy(blocksVelocity[i]);
+                    i = blocksVelocity.Length;
+                }
+            }
+
+            //redo shape
+            int currentShapeValue = shapeValue;
+            do
+            {
+                shapeValue = Random.Range(0, 4);
+            } while (shapeValue == currentShapeValue);
+
             Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
             GetComponent<AudioSource>().Play();
 
-            colourValue++;
-            if (colourValue > 3)
-                colourValue = 0;
-            shapeValue = Random.Range(0, 4);
+            //set to ad button
+            redoButton.GetComponent<Image>().sprite = adSprite;
+            redoText.GetComponent<Text>().text = ("0");
         }
-        
-        if(redos == 0)
+        else if(redos < 0)
         {
-            redoButton.GetComponent<Button>().interactable = false;
-            redoText.GetComponent<Text>().text = ("" + redos);
+            adsManager.GetComponent<AdsManagerScript>().ShowRewardedVideo();
         }
+    }
+
+    public void RewardedRedoShape()
+    {
+        for (int i = 0; i < blocksVelocity.Length; i++)
+        {
+            if (blocksVelocity[i].GetComponent<DragAndDrop>().useable == true)
+            {
+                Destroy(blocksVelocity[i]);
+                i = blocksVelocity.Length;
+            }
+        }
+        redos--;
+        redoText.GetComponent<Text>().text = ("" + redos);
+
+        //redo shape
+        int currentShapeValue = shapeValue;
+        do
+        {
+            shapeValue = Random.Range(0, 4);
+        } while (shapeValue == currentShapeValue);
+
+        Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+        GetComponent<AudioSource>().Play();
+
+        redoButton.GetComponent<Image>().sprite = redoSprite;
+        redoButton.GetComponent<Button>().interactable = false;
+        redoText.GetComponent<Text>().text = ("0");
+
     }
 
     public void EndGame()

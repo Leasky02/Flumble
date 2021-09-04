@@ -61,8 +61,15 @@ public class FourPlayerStructure : MonoBehaviour
 
     private Color[] colours = new Color[4];
 
+    //lives variables
+    private int startingLives = 3;
+    [SerializeField] private GameObject[] livesText;
+    private int[] livesleft = new int[5];
+    [SerializeField] private GameObject gameplayManager;
+
     public void Start()
     {
+        startingLives = gameplayManager.GetComponent<GameplaySettings>().ReturnLives();
         shapeValue = Random.Range(0, 4);
         //saves position that elements start in
         screenPosition = readyScreen.GetComponent<Transform>().position;
@@ -74,6 +81,18 @@ public class FourPlayerStructure : MonoBehaviour
         finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100 , finishButton.GetComponent<Transform>().position.y);
         exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x + 100 , exitButton.GetComponent<Transform>().position.y);
         leaderboardScreen.GetComponent<RectTransform>().position = new Vector2(leaderboardLocation.x + 100, leaderboardScreen.GetComponent<RectTransform>().position.y);
+
+        //set lives
+        livesleft[1] = startingLives;
+        livesleft[2] = startingLives;
+        livesleft[3] = startingLives;
+        livesleft[4] = startingLives;
+
+        //set lives text
+        livesText[1].GetComponent<Text>().text = ("" + startingLives);
+        livesText[2].GetComponent<Text>().text = ("" + startingLives);
+        livesText[3].GetComponent<Text>().text = ("" + startingLives);
+        livesText[4].GetComponent<Text>().text = ("" + startingLives);
 
         //set all block values;
 
@@ -315,6 +334,25 @@ public class FourPlayerStructure : MonoBehaviour
             Player1();
         }
     }
+
+    //lose a life function
+    public void LoseLives()
+    {
+        //remove a life and update text
+        livesleft[currentPlayer]--;
+        livesText[currentPlayer].GetComponent<Text>().text = ("" + livesleft[currentPlayer]);
+        //if player is out
+        if(livesleft[currentPlayer] <= 0)
+        {
+            PlayerOut();
+        }
+        else
+        {
+            EndTurn();
+        }
+    }
+
+
     //player goes out function
     public void PlayerOut()
     {
@@ -331,6 +369,7 @@ public class FourPlayerStructure : MonoBehaviour
                     oneOut = true;
                     leaderboard[outPosition] = "Player 1";
                     playerText[0].GetComponent<Text>().color = new Color(0.54f, 0.54f, 0.54f, 0.5f);
+                    livesText[currentPlayer].GetComponent<Text>().color = new Color(0.54f, 0.54f, 0.54f, 0.5f);
                     break;
                 }
             case 2:
@@ -338,6 +377,7 @@ public class FourPlayerStructure : MonoBehaviour
                     twoOut = true;
                     leaderboard[outPosition] = "Player 2";
                     playerText[1].GetComponent<Text>().color = new Color(0.54f, 0.54f, 0.54f, 0.5f);
+                    livesText[currentPlayer].GetComponent<Text>().color = new Color(0.54f, 0.54f, 0.54f, 0.5f);
                     break;
                 }
             case 3:
@@ -345,6 +385,7 @@ public class FourPlayerStructure : MonoBehaviour
                     threeOut = true;
                     leaderboard[outPosition] = "Player 3";
                     playerText[2].GetComponent<Text>().color = new Color(0.54f, 0.54f, 0.54f, 0.5f);
+                    livesText[currentPlayer].GetComponent<Text>().color = new Color(0.54f, 0.54f, 0.54f, 0.5f);
                     break;
                 }
             case 4:
@@ -352,6 +393,7 @@ public class FourPlayerStructure : MonoBehaviour
                     fourOut = true;
                     leaderboard[outPosition] = "Player 4";
                     playerText[3].GetComponent<Text>().color = new Color(0.54f, 0.54f, 0.54f, 0.5f);
+                    livesText[currentPlayer].GetComponent<Text>().color = new Color(0.54f, 0.54f, 0.54f, 0.5f);
                     break;
                 }
         }

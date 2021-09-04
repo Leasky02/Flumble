@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class ButtonMovement : MonoBehaviour
@@ -13,6 +14,8 @@ public class ButtonMovement : MonoBehaviour
     private bool firstTime2 = true;
 
     private string sceneToLoad;
+
+    [SerializeField] private GameObject multiplayerSetupTitle;
 
     // Start is called before the first frame update
     void Start()
@@ -77,9 +80,26 @@ public class ButtonMovement : MonoBehaviour
         }
     }
 
-    public void AttemptPlayGame2(string scene)
+    public void MultiplayerSetup(string scene)
     {
         sceneToLoad = scene;
+        MoveLeft();
+        if(sceneToLoad == ("2 Players"))
+        {
+            multiplayerSetupTitle.GetComponent<Text>().text = ("2 Players");
+        }
+        if (sceneToLoad == ("3 Players"))
+        {
+            multiplayerSetupTitle.GetComponent<Text>().text = ("3 Players");
+        }
+        if (sceneToLoad == ("4 Players"))
+        {
+            multiplayerSetupTitle.GetComponent<Text>().text = ("4 Players");
+        }
+    }
+
+    public void AttemptPlayGame2()
+    {
         if (firstTime2)
         {
             MoveUp();

@@ -21,7 +21,7 @@ public class BlockDetector : MonoBehaviour
                 collision.collider.GetComponent<ParticleSystem>().Play();
 
                 //call player out
-                gameManager.GetComponent<FourPlayerStructure>().PlayerOut();
+                gameManager.GetComponent<FourPlayerStructure>().LoseLives();
                 detecting = false;
             }
 

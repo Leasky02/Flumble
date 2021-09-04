@@ -5,19 +5,20 @@ using UnityEngine.UI;
 
 public class FreePlay : MonoBehaviour
 {
+    //UI elements
     [SerializeField] GameObject startScreen;
     [SerializeField] GameObject exitButton;
     [SerializeField] GameObject colourButton;
     [SerializeField] GameObject greyPlatform;
 
+    //toolbox components
     [SerializeField] GameObject toolbox;
     private Vector2 toolboxLocation;
-
     [SerializeField] GameObject toggleViewButton;
-
     private bool visible = true;
     [SerializeField] Slider slider;
 
+    //shapes
     [SerializeField] private GameObject[,] blocks = new GameObject[4, 4];
     [SerializeField] private GameObject[] squares;
     [SerializeField] private GameObject[] triangles;
@@ -83,7 +84,13 @@ public class FreePlay : MonoBehaviour
 
     public void SpawnShape(int shape)
     {
-        Instantiate(blocks[shape, colourValue], new Vector2 (greyPlatform.GetComponent<Transform>().position.x, greyPlatform.GetComponent<Transform>().position.y), Quaternion.identity);
+        GameObject[] blocksInPlay = GameObject.FindGameObjectsWithTag("block");
+        if (blocksInPlay.Length < 10)
+            Instantiate(blocks[shape, colourValue], new Vector2(greyPlatform.GetComponent<Transform>().position.x, greyPlatform.GetComponent<Transform>().position.y), Quaternion.identity);
+        else
+            GetComponent<AudioSource>().Play();
+
+        Debug.Log(blocksInPlay.Length);
     }
 
     public void SetColour()
