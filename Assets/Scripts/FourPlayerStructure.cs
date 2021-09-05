@@ -67,6 +67,11 @@ public class FourPlayerStructure : MonoBehaviour
     private int[] livesleft = new int[5];
     [SerializeField] private GameObject gameplayManager;
 
+    //height
+    private float maxHeight;
+    private float tempMaxHeight;
+    [SerializeField] private GameObject cam;
+
     public void Start()
     {
         startingLives = gameplayManager.GetComponent<GameplaySettings>().ReturnLives();
@@ -171,10 +176,30 @@ public class FourPlayerStructure : MonoBehaviour
         {
             finishButton.GetComponent<Button>().interactable = true;
         }
+
+        if(!stillMovement)
+            readyScreen.SetActive(true);
     }
     //begins players turn
     public void NextTurn()
     {
+        tempMaxHeight = -10;
+
+        //find highest block
+        for (int i = 0; i < blocksVelocity.Length; i++)
+        {
+            //set all gravity tp normal
+            blocksVelocity[i].GetComponent<Rigidbody2D>().gravityScale = 5f;
+            if (blocksVelocity[i].GetComponent<Transform>().position.y > maxHeight)
+            {
+                maxHeight = (blocksVelocity[i].GetComponent<Transform>().position.y);
+            }
+            if (blocksVelocity[i].GetComponent<Transform>().position.y > tempMaxHeight)
+            {
+                tempMaxHeight = (blocksVelocity[i].GetComponent<Transform>().position.y);
+            }
+        }
+
         turnOver = false;
         GetComponent<AudioSource>().Play();
         switch(nextPlayer)
@@ -206,6 +231,11 @@ public class FourPlayerStructure : MonoBehaviour
     //finished turn 
     public void EndTurn()
     {
+        //set all blocks gravity on
+        for (int i = 0; i < blocksVelocity.Length; i++)
+        {
+            blocksVelocity[i].GetComponent<Rigidbody2D>().gravityScale = 5f;
+        }
         //sets UI in place
         readyScreen.GetComponent<Transform>().position = new Vector2(screenPosition.x, readyScreen.GetComponent<Transform>().position.y);
         finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100, finishButton.GetComponent<Transform>().position.y);
@@ -270,7 +300,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 1;
             nextPlayer = 2;
-            Instantiate(blocks[shapeValue, 0], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 0], new Vector2(platform.GetComponent<Transform>().position.x, maxHeight), Quaternion.identity);
             playerText[0].GetComponent<Animator>().Play("Player1Active");
         }
         else
@@ -285,7 +315,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 2;
             nextPlayer = 3;
-            Instantiate(blocks[shapeValue, 1], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 1], new Vector2(platform.GetComponent<Transform>().position.x, maxHeight), Quaternion.identity);
             playerText[1].GetComponent<Animator>().Play("Player2Active");
         }
         else
@@ -300,7 +330,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 3;
             nextPlayer = 4;
-            Instantiate(blocks[shapeValue, 2], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 2], new Vector2(platform.GetComponent<Transform>().position.x, maxHeight), Quaternion.identity);
             playerText[2].GetComponent<Animator>().Play("Player3Active");
         }
         else
@@ -315,7 +345,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 4;
             nextPlayer = 1;
-            Instantiate(blocks[shapeValue, 3], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 3], new Vector2(platform.GetComponent<Transform>().position.x, maxHeight), Quaternion.identity);
             playerText[3].GetComponent<Animator>().Play("Player4Active");
 
             //changes what shape is used in next round
@@ -338,6 +368,8 @@ public class FourPlayerStructure : MonoBehaviour
     //lose a life function
     public void LoseLives()
     {
+        Debug.Log("function called");
+        readyScreen.SetActive(false);
         //remove a life and update text
         livesleft[currentPlayer]--;
         livesText[currentPlayer].GetComponent<Text>().text = ("" + livesleft[currentPlayer]);

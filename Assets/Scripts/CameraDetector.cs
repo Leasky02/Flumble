@@ -14,16 +14,16 @@ public class CameraDetector : MonoBehaviour
             if(collision.GetComponent<DragAndDrop>().useable)
             {
                 if (cameraType == "down")
-                    cameraObject.GetComponent<CameraMovement>().MoveCamDown();
+                    cameraObject.GetComponent<CameraMovement>().MoveCamDown(1);
 
                 if (cameraType == "up")
-                    cameraObject.GetComponent<CameraMovement>().MoveCamUp();
+                    cameraObject.GetComponent<CameraMovement>().MoveCamUp(1);
 
                 if (cameraType == "left")
-                    cameraObject.GetComponent<CameraMovement>().MoveCamLeft();
+                    cameraObject.GetComponent<CameraMovement>().MoveCamLeft(1);
 
                 if (cameraType == "right")
-                    cameraObject.GetComponent<CameraMovement>().MoveCamRight();
+                    cameraObject.GetComponent<CameraMovement>().MoveCamRight(1);
             }
         }
     }

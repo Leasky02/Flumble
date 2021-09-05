@@ -11,8 +11,9 @@ public class BlockDetectorSinglePlayer : MonoBehaviour
     {
         if (collision.collider.CompareTag("block"))
         {
+            Debug.Log(detecting);
             //destroy object
-            Destroy(collision.collider, 0.4f);
+            Destroy(collision.collider);
             if (detecting)
             {
                 //play audio
@@ -20,12 +21,13 @@ public class BlockDetectorSinglePlayer : MonoBehaviour
                 GetComponent<AudioSource>().Play();
 
                 //call player out
-                gameManager.GetComponent<SinglePlayerStructure>().EndGame();
+                gameManager.GetComponent<SinglePlayerStructure>().LoseLife();
                 detecting = false;
             }
 
             //play particles
             collision.collider.GetComponent<SpriteRenderer>().enabled = false;
+            collision.collider.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
             collision.collider.GetComponent<ParticleSystem>().Play();
 
         }

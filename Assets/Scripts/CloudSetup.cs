@@ -89,7 +89,7 @@ public class CloudSetup : MonoBehaviour
     {
         if (collision.CompareTag("cloud"))
         {
-            Debug.Log("collide");
+            //Debug.Log("collide");
             GetComponent<Transform>().position = new Vector2(x_Parameters[0].GetComponent<Transform>().position.x, GetComponent<Transform>().position.y);
         }
     }

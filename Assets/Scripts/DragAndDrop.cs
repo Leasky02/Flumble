@@ -88,6 +88,7 @@ public class DragAndDrop : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        Debug.Log("clicked");
         if (useable)
         {
             usingThisObject = true;
@@ -121,8 +122,11 @@ public class DragAndDrop : MonoBehaviour
             if(!unusable && usingThisObject)
             {
                 //move the object towards the position of the mouse / screen touch
-                Vector3 mouseposition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-                GetComponent<Rigidbody2D>().MovePosition(mouseposition);
+                if (Input.touchCount > 0)
+                {
+                    Vector3 mouseposition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+                    GetComponent<Rigidbody2D>().MovePosition(mouseposition);
+                }
             }
         }
     }

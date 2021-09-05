@@ -27,31 +27,25 @@ public class GameplaySettings : MonoBehaviour
         }
         else
         {
-            Debug.Log("setting base");
             if(baseWidth <= 4)
             {
-                baseBlocks[5].GetComponent<SpriteRenderer>().enabled = false;
-                baseBlocks[5].GetComponent<BoxCollider2D>().enabled = false;
+                baseBlocks[5].SetActive(false);
             }
             if(baseWidth <= 3)
             {
-                baseBlocks[4].GetComponent<SpriteRenderer>().enabled = false;
-                baseBlocks[4].GetComponent<BoxCollider2D>().enabled = false;
+                baseBlocks[4].SetActive(false);
             }
             if (baseWidth <= 2)
             {
-                baseBlocks[3].GetComponent<SpriteRenderer>().enabled = false;
-                baseBlocks[3].GetComponent<BoxCollider2D>().enabled = false;
+                baseBlocks[3].SetActive(false);
             }
             if (baseWidth <= 1)
             {
-                baseBlocks[2].GetComponent<SpriteRenderer>().enabled = false;
-                baseBlocks[2].GetComponent<BoxCollider2D>().enabled = false;
+                baseBlocks[2].SetActive(false);
             }
             if (baseWidth <= 0)
             {
-                baseBlocks[1].GetComponent<SpriteRenderer>().enabled = false;
-                baseBlocks[1].GetComponent<BoxCollider2D>().enabled = false;
+                baseBlocks[1].SetActive(false);
             }
         }
     }

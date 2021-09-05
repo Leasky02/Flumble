@@ -10,7 +10,7 @@ public class BlockDetectorMainMenu : MonoBehaviour
         if (collision.collider.CompareTag("block"))
         {
             //detroy object
-            Destroy(collision.collider, 0.4f);
+            Destroy(collision.collider);
             //play audio
             GetComponent<AudioSource>().clip = audioClip;
             GetComponent<AudioSource>().Play();

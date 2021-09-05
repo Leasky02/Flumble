@@ -7,6 +7,8 @@ public class SinglePlayerStructure : MonoBehaviour
 {
     public GameObject ground;
 
+    float tempMaxHeight = -10;
+
     //spawn platform for blocks
     [SerializeField] private GameObject platform;
 
@@ -61,8 +63,15 @@ public class SinglePlayerStructure : MonoBehaviour
     [SerializeField] private GameObject redoObject;
     [SerializeField] private GameObject redoText;
 
+    //lives variables
+    private int lives = 3;
+    [SerializeField] private GameObject livesText;
+
+    private bool turnActive = false;
+
     public void Start()
     {
+        livesText.GetComponent<Text>().text = ("" + lives);
         shapeValue = Random.Range(0, 4);
 
         //set all block values;
@@ -117,8 +126,9 @@ public class SinglePlayerStructure : MonoBehaviour
                 stillMovement = false;
             }
         }
+        Debug.Log(stillMovement);
         //if block is moving or being dragged or hasnt even been moved yet, dont allow button to be pressed
-        if (stillMovement || GetComponent<DragAndDrop>().IsItDragging() == true || GetComponent<DragAndDrop>().IsItMoved() == false)
+        if (stillMovement || GetComponent<DragAndDrop>().IsItDragging() == true || GetComponent<DragAndDrop>().IsItMoved() == false || !turnActive)
         {
             finishButton.GetComponent<Button>().interactable = false;
         }
@@ -135,30 +145,43 @@ public class SinglePlayerStructure : MonoBehaviour
         redoObject.GetComponent<RectTransform>().position = new Vector2(redoObjectPosition.x, redoObjectPosition.y);
         startScreen.GetComponent<RectTransform>().position = new Vector2(startScreen.GetComponent<RectTransform>().position.x + 100, startScreen.GetComponent<RectTransform>().position.y);
         NextTurn();
+        turnActive = true;
     }
 
     public void NextTurn()
     {
+
+        turnActive = true;
+        ground.GetComponent<BlockDetectorSinglePlayer>().SetDetecting();
+
         colourValue++;
         if (colourValue > 3)
             colourValue = 0;
+
+        tempMaxHeight = -10;
 
         shapeValue = Random.Range(0, 4);
         GetComponent<AudioSource>().Play();
         for (int i = 0; i < blocksVelocity.Length; i++)
         {
+            //set all gravity tp normal
+            blocksVelocity[i].GetComponent<Rigidbody2D>().gravityScale = 5f;
             if (blocksVelocity[i].GetComponent<Transform>().position.y + 2.5f > maxHeight)
             {
                 maxHeight = (blocksVelocity[i].GetComponent<Transform>().position.y + 2.5f) * 6;
+            }
+
+            if (blocksVelocity[i].GetComponent<Transform>().position.y > tempMaxHeight)
+            {
+                tempMaxHeight = blocksVelocity[i].GetComponent<Transform>().position.y;
             }
         }
         blockTotal++;
         //reset scripts
         GetComponent<DisableDragging>().Disable();
         GetComponent<DragAndDrop>().ResetMoved();
-        ground.GetComponent<BlockDetectorSinglePlayer>().SetDetecting();
 
-        Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+        Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight), Quaternion.identity);
 
         exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x, exitButton.GetComponent<Transform>().position.y);
     }
@@ -247,6 +270,21 @@ public class SinglePlayerStructure : MonoBehaviour
 
     }
 
+    public void LoseLife()
+    {
+        turnActive = false;
+        lives--;
+        livesText.GetComponent<Text>().text = ("" + lives);
+        if(lives <= 0)
+        {
+            EndGame();
+        }
+        else
+        {
+            Invoke("NextTurn" , 1.5f);
+        }
+
+    }
     public void EndGame()
     {
         EndScreen.GetComponent<RectTransform>().position = new Vector2(endScreenPosition.x, EndScreen.GetComponent<RectTransform>().position.y);
