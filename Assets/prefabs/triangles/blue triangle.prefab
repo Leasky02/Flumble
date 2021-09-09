@@ -184,7 +184,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unusable: 0
   active: 0
+  usingThisObject: 0
   useable: 1
+  canBeDestroyed: 0
   colourBlindText: {fileID: 5697603779407565268}
   binSound: {fileID: 8300000, guid: 2014bc24dba868d469bb7075ac0398f3, type: 3}
 --- !u!114 &6529642892254158273

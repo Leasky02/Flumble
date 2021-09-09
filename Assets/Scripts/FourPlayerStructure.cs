@@ -69,8 +69,14 @@ public class FourPlayerStructure : MonoBehaviour
 
     //height
     private float maxHeight;
-    private float tempMaxHeight;
+    private float tempMaxHeight = 0;
     [SerializeField] private GameObject cam;
+
+    private bool testForStability = false;
+
+    //end celebrations
+    [SerializeField] private AudioClip winSound;
+    [SerializeField] private GameObject[] particles;
 
     public void Start()
     {
@@ -179,11 +185,20 @@ public class FourPlayerStructure : MonoBehaviour
 
         if(!stillMovement)
             readyScreen.SetActive(true);
+
+        if(testForStability)
+        {
+            if (!stillMovement)
+            {
+                testForStability = false;
+                EndTurn();
+            }
+        }
     }
     //begins players turn
     public void NextTurn()
     {
-        tempMaxHeight = -10;
+        tempMaxHeight = -2;
 
         //find highest block
         for (int i = 0; i < blocksVelocity.Length; i++)
@@ -300,7 +315,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 1;
             nextPlayer = 2;
-            Instantiate(blocks[shapeValue, 0], new Vector2(platform.GetComponent<Transform>().position.x, maxHeight), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 0], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1), Quaternion.identity);
             playerText[0].GetComponent<Animator>().Play("Player1Active");
         }
         else
@@ -315,7 +330,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 2;
             nextPlayer = 3;
-            Instantiate(blocks[shapeValue, 1], new Vector2(platform.GetComponent<Transform>().position.x, maxHeight), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 1], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1), Quaternion.identity);
             playerText[1].GetComponent<Animator>().Play("Player2Active");
         }
         else
@@ -330,7 +345,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 3;
             nextPlayer = 4;
-            Instantiate(blocks[shapeValue, 2], new Vector2(platform.GetComponent<Transform>().position.x, maxHeight), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 2], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1), Quaternion.identity);
             playerText[2].GetComponent<Animator>().Play("Player3Active");
         }
         else
@@ -345,7 +360,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 4;
             nextPlayer = 1;
-            Instantiate(blocks[shapeValue, 3], new Vector2(platform.GetComponent<Transform>().position.x, maxHeight), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 3], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1), Quaternion.identity);
             playerText[3].GetComponent<Animator>().Play("Player4Active");
 
             //changes what shape is used in next round
@@ -368,7 +383,15 @@ public class FourPlayerStructure : MonoBehaviour
     //lose a life function
     public void LoseLives()
     {
-        Debug.Log("function called");
+        for (int i = 0; i < blocksVelocity.Length; i++)
+        {
+            if (blocksVelocity[i].GetComponent<DragAndDrop>().useable == true && blocksVelocity[i].GetComponent<DragAndDrop>().canBeDestroyed == false)
+            {
+                Destroy(blocksVelocity[i]);
+            }
+        }
+
+        //Debug.Log("function called");
         readyScreen.SetActive(false);
         //remove a life and update text
         livesleft[currentPlayer]--;
@@ -447,7 +470,7 @@ public class FourPlayerStructure : MonoBehaviour
         }
         else if(!setup)
         {
-            Invoke("EndTurn", 1.5f);
+            testForStability = true;
         }
     }
     
@@ -455,6 +478,38 @@ public class FourPlayerStructure : MonoBehaviour
     public void EndGame()
     {
         //make it play sound
+        GetComponent<AudioSource>().clip = winSound;
+        //particle colour
+        if (leaderboard[0] == "Player 1")
+        {
+            particles[0].GetComponent<ParticleSystem>().startColor = colours[0];
+            particles[1].GetComponent<ParticleSystem>().startColor = colours[0];
+            particles[2].GetComponent<ParticleSystem>().startColor = colours[0];
+        }
+        if (leaderboard[0] == "Player 2")
+        {
+            particles[0].GetComponent<ParticleSystem>().startColor = colours[1];
+            particles[1].GetComponent<ParticleSystem>().startColor = colours[1];
+            particles[2].GetComponent<ParticleSystem>().startColor = colours[1];
+        }
+        if (leaderboard[0] == "Player 3")
+        {
+            particles[0].GetComponent<ParticleSystem>().startColor = colours[2];
+            particles[1].GetComponent<ParticleSystem>().startColor = colours[2];
+            particles[2].GetComponent<ParticleSystem>().startColor = colours[2];
+        }
+        if (leaderboard[0] == "Player 4")
+        {
+            particles[0].GetComponent<ParticleSystem>().startColor = colours[3];
+            particles[1].GetComponent<ParticleSystem>().startColor = colours[3];
+            particles[2].GetComponent<ParticleSystem>().startColor = colours[3];
+        }
+
+        //play particle
+        particles[0].GetComponent<ParticleSystem>().Play();
+        particles[1].GetComponent<ParticleSystem>().Play();
+        particles[2].GetComponent<ParticleSystem>().Play();
+        GetComponent<AudioSource>().Play();
         exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x + 100, exitButton.GetComponent<Transform>().position.y);
         leaderboardScreen.GetComponent<RectTransform>().position = new Vector2(leaderboardLocation.x, leaderboardScreen.GetComponent<RectTransform>().position.y);
         finishButton.GetComponent<Transform>().position = new Vector2(buttonPosition.x + 100, finishButton.GetComponent<Transform>().position.y);
@@ -463,7 +518,7 @@ public class FourPlayerStructure : MonoBehaviour
         leaderboardPositions[1].GetComponent<Text>().text = leaderboard[1];
         leaderboardPositions[2].GetComponent<Text>().text = leaderboard[2];
         leaderboardPositions[3].GetComponent<Text>().text = leaderboard[3];
-        //set colours
+
         //1st
         if(leaderboard[0] == "Player 1")
         {

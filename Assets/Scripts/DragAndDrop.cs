@@ -13,7 +13,7 @@ public class DragAndDrop : MonoBehaviour
     public bool active = false;
     private string currentScene;
 
-    private bool usingThisObject;
+    public bool usingThisObject;
 
     //variable that contains if an object is being dragged
     static bool dragging;
@@ -22,6 +22,8 @@ public class DragAndDrop : MonoBehaviour
 
     //if it is released
     private bool released = false;
+
+    public bool canBeDestroyed = false;
 
     //object containing colour blind more
     [SerializeField] private GameObject colourBlindText;
@@ -88,14 +90,15 @@ public class DragAndDrop : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        Debug.Log("clicked");
+        //Debug.Log("clicked");
         if (useable)
         {
             usingThisObject = true;
+            moved = true;
+            canBeDestroyed = false;
             dragging = true;
             active = true;
-            moved = true;
-            GetComponent<Rigidbody2D>().gravityScale = 5;
+            GetComponent<Rigidbody2D>().gravityScale = 0;
             released = false;
         }
     }
@@ -106,6 +109,7 @@ public class DragAndDrop : MonoBehaviour
         {
             usingThisObject = false;
             dragging = false;
+            canBeDestroyed = true;
             active = false;
             GetComponent<Rigidbody2D>().gravityScale = 5;
             released = true;

@@ -24,6 +24,9 @@ public class FreePlay : MonoBehaviour
     [SerializeField] private GameObject[] triangles;
     [SerializeField] private GameObject[] circles;
     [SerializeField] private GameObject[] lines;
+
+    //toggle Sprites
+    [SerializeField] private Sprite[] toggleSprites;
     private Vector2 exitButtonLocation;
     private Vector2 toggleViewLocation;
 
@@ -127,12 +130,14 @@ public class FreePlay : MonoBehaviour
         {
             visible = false;
             toggleViewButton.GetComponent<SpriteRenderer>().enabled = true;
+            toggleViewButton.GetComponentInChildren<Image>().sprite = toggleSprites[0];
             toolbox.GetComponent<RectTransform>().position = new Vector2(toolboxLocation.x + 100, toolbox.GetComponent<RectTransform>().position.y);
         }
         else if(!visible)
         {
             visible = true;
             toggleViewButton.GetComponent<SpriteRenderer>().enabled = false;
+            toggleViewButton.GetComponentInChildren<Image>().sprite = toggleSprites[1];
             toolbox.GetComponent<RectTransform>().position = new Vector2(toolboxLocation.x, toolbox.GetComponent<RectTransform>().position.y);
         }
     }
