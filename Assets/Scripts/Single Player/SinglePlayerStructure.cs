@@ -144,10 +144,15 @@ public class SinglePlayerStructure : MonoBehaviour
             if (!stillMovement)
             {
                 testForStability = false;
-                redoButton.GetComponent<Button>().interactable = true;
+                Invoke("RedoButtonVisible", 0.5f);
                 Invoke("NextTurn", 0.2f);
             }
         }
+    }
+
+    public void RedoButtonVisible()
+    {
+        redoButton.GetComponent<Button>().interactable = true;
     }
 
     public void Begin()
@@ -177,9 +182,9 @@ public class SinglePlayerStructure : MonoBehaviour
         {
             //set all gravity tp normal
             blocksVelocity[i].GetComponent<Rigidbody2D>().gravityScale = 5f;
-            if ((blocksVelocity[i].GetComponent<Transform>().position.y)*6 > maxHeight)
+            if ((blocksVelocity[i].GetComponent<Transform>().position.y + 2.5) > maxHeight)
             {
-                maxHeight = (blocksVelocity[i].GetComponent<Transform>().position.y) * 6;
+                maxHeight = (blocksVelocity[i].GetComponent<Transform>().position.y + 2.5f);
             }
 
             if (blocksVelocity[i].GetComponent<Transform>().position.y > tempMaxHeight)
@@ -192,7 +197,7 @@ public class SinglePlayerStructure : MonoBehaviour
         GetComponent<DisableDragging>().Disable();
         GetComponent<DragAndDrop>().ResetMoved();
 
-        Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight +1), Quaternion.identity);
+        Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight +1.5f), Quaternion.identity);
 
         exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x, exitButton.GetComponent<Transform>().position.y);
     }
@@ -219,7 +224,7 @@ public class SinglePlayerStructure : MonoBehaviour
                 shapeValue = Random.Range(0, 4);
             } while (shapeValue == currentShapeValue);
 
-            Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+            Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1.5f), Quaternion.identity);
             GetComponent<AudioSource>().Play();
         }else if(redos == 0)
         {
@@ -239,7 +244,7 @@ public class SinglePlayerStructure : MonoBehaviour
                 shapeValue = Random.Range(0, 4);
             } while (shapeValue == currentShapeValue);
 
-            Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, platform.GetComponent<Transform>().position.y), Quaternion.identity);
+            Instantiate(blocks[shapeValue, colourValue], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1.5f), Quaternion.identity);
             GetComponent<AudioSource>().Play();
 
             //set to ad button
@@ -321,6 +326,7 @@ public class SinglePlayerStructure : MonoBehaviour
         exitButton.GetComponent<Transform>().position = new Vector2(exitButtonPosition.x + 100, exitButton.GetComponent<Transform>().position.y);
 
         maxHeight = Mathf.Round(maxHeight * 10.0f) * 0.1f;
+        maxHeight = maxHeight * 3;
         heightReached.GetComponent<Text>().text = ("" + maxHeight + "m");
         blocksPlaced.GetComponent<Text>().text = ("" + blockTotal);
 

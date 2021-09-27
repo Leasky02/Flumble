@@ -11,6 +11,9 @@ public class FreePlay : MonoBehaviour
     [SerializeField] GameObject colourButton;
     [SerializeField] GameObject greyPlatform;
 
+    [SerializeField] AudioClip popSound;
+    [SerializeField] AudioClip errorSound;
+
     //toolbox components
     [SerializeField] GameObject toolbox;
     private Vector2 toolboxLocation;
@@ -88,12 +91,19 @@ public class FreePlay : MonoBehaviour
     public void SpawnShape(int shape)
     {
         GameObject[] blocksInPlay = GameObject.FindGameObjectsWithTag("block");
-        if (blocksInPlay.Length < 10)
+        if (blocksInPlay.Length < 50)
+        {
             Instantiate(blocks[shape, colourValue], new Vector2(greyPlatform.GetComponent<Transform>().position.x, greyPlatform.GetComponent<Transform>().position.y), Quaternion.identity);
-        else
+            GetComponent<AudioSource>().clip = popSound;
             GetComponent<AudioSource>().Play();
+        }
+        else
+        {
+            GetComponent<AudioSource>().clip = errorSound;
+            GetComponent<AudioSource>().Play();
+        }
 
-        Debug.Log(blocksInPlay.Length);
+        //Debug.Log(blocksInPlay.Length);
     }
 
     public void SetColour()

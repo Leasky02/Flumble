@@ -51,7 +51,7 @@ public class MainMenuSimulation : MonoBehaviour
     {
         //setting all random variables
         randomShape = Random.Range(0, 4);
-        randomXPosition = Random.Range(2f, 5.1f);
+        randomXPosition = Random.Range(1f, 5.1f);
         colourValue++;
         if (colourValue > 3)
             colourValue = 0;

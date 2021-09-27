@@ -58,13 +58,13 @@ public class CloudSetup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetComponent<Rigidbody2D>().AddForce(Vector2.right * speed);
+        GetComponent<Rigidbody2D>().AddForce(Vector2.right * speed * Time.deltaTime);
     }
 
     public void ClassOne()
     {
         //sets cloud speed
-        speed = 0.3f;
+        speed = 11f;
         //sets alpha value
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.9f);
     }
@@ -72,7 +72,7 @@ public class CloudSetup : MonoBehaviour
     public void ClassTwo()
     {
         //sets cloud speed
-        speed = 0.2f;
+        speed = 9f;
         //sets alpha value
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.6f);
     }
@@ -80,7 +80,7 @@ public class CloudSetup : MonoBehaviour
     public void ClassThree()
     {
         //sets cloud speed
-        speed = 0.1f;
+        speed = 7f;
         //sets alpha value
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.3f);
     }

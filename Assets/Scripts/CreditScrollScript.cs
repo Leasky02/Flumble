@@ -11,7 +11,7 @@ public class CreditScrollScript : MonoBehaviour
     void Update()
     {
         if(rollCredits)
-            GetComponent<Rigidbody2D>().AddForce(transform.up * force);
+            GetComponent<Rigidbody2D>().AddForce(transform.up * force * Time.deltaTime);
     }
 
     public void QueueCredits(bool move)

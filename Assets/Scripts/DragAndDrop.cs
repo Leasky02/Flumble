@@ -20,6 +20,8 @@ public class DragAndDrop : MonoBehaviour
     //if script should be used
     public bool useable = true;
 
+    private bool delete = true;
+
     //if it is released
     private bool released = false;
 
@@ -99,6 +101,7 @@ public class DragAndDrop : MonoBehaviour
             dragging = true;
             active = true;
             GetComponent<Rigidbody2D>().gravityScale = 0;
+            GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
             released = false;
         }
     }
@@ -139,13 +142,15 @@ public class DragAndDrop : MonoBehaviour
     {
         if (collision.CompareTag("delete"))
         {
-            if (released)
+            if (released && delete)
             {
                 GetComponent<SpriteRenderer>().enabled = false;
                 Destroy(gameObject.GetComponent<BoxCollider2D>());
                 GetComponent<AudioSource>().clip = binSound;
                 GetComponent<AudioSource>().Play();
                 Destroy(gameObject, 0.5f);
+                delete = false;
+                Invoke("SetDelete", 0.1f);
             }
         }
 
@@ -156,8 +161,14 @@ public class DragAndDrop : MonoBehaviour
         }
     }
 
+    public void SetDelete()
+    {
+        delete = true;
+    }
+
     public void UnDraggable()
     {
+        canBeDestroyed = true;
         useable = false;
         colourBlindText.GetComponent<SpriteRenderer>().enabled = false;
     }

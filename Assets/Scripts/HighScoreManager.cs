@@ -16,11 +16,16 @@ public class HighScoreManager : MonoBehaviour
     [SerializeField] private GameObject highScoreText;
     [SerializeField] private GameObject blocksPlacedScore;
     [SerializeField] private GameObject heightScore;
+
+    //particles
+    [SerializeField] private GameObject[] particles;
     // Start is called before the first frame update
     void Awake()
     {
-        heightRecord = PlayerPrefs.GetFloat("heightRecord");
+        heightRecord = PlayerPrefs.GetFloat("heightRecord1");
         blocksPlacedRecord = PlayerPrefs.GetInt("blocksPlacedRecord");
+
+        //Debug.Log(heightRecord);
     }
 
     void Start()
@@ -32,22 +37,23 @@ public class HighScoreManager : MonoBehaviour
         }
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void CheckHeight(float height)
     {
         if(height > heightRecord)
         {
             heightRecord = height;
-            PlayerPrefs.SetFloat("heightRecord", heightRecord);
+            PlayerPrefs.SetFloat("heightRecord1", heightRecord);
             highScoreText.GetComponent<Text>().enabled = true;
             heightScore.GetComponent<Text>().color = new Color(130f/255f , 231f/255f , 130f/255f, 1f);
-            //set player pref
+
+            particles[0].GetComponent<ParticleSystem>().Play();
+            particles[1].GetComponent<ParticleSystem>().Play();
+            particles[2].GetComponent<ParticleSystem>().Play();
+            GetComponent<AudioSource>().Play();
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("heightRecord1", heightRecord);
         }
     }
 
@@ -59,6 +65,11 @@ public class HighScoreManager : MonoBehaviour
             PlayerPrefs.SetInt("blocksPlacedRecord", blocksPlacedRecord);
             highScoreText.GetComponent<Text>().enabled = true;
             blocksPlacedScore.GetComponent<Text>().color = new Color(130f / 255f, 231f / 255f, 130f / 255f, 1f);
+
+            particles[0].GetComponent<ParticleSystem>().Play();
+            particles[1].GetComponent<ParticleSystem>().Play();
+            particles[2].GetComponent<ParticleSystem>().Play();
+            GetComponent<AudioSource>().Play();
         }
     }
 }

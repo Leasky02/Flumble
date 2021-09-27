@@ -16,6 +16,7 @@ public class ButtonMovement : MonoBehaviour
     private string sceneToLoad;
 
     [SerializeField] private GameObject multiplayerSetupTitle;
+    [SerializeField] private GameObject questionMark;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +41,7 @@ public class ButtonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rt.position = Vector2.MoveTowards(rt.position, newPosition, 1.5f);
+        rt.position = Vector2.MoveTowards(rt.position, newPosition, 100f * Time.deltaTime);
     }
 
     public void MoveLeft()
@@ -65,6 +66,11 @@ public class ButtonMovement : MonoBehaviour
     {
         GetComponent<AudioSource>().Play();
         newPosition = new Vector2(rt.position.x, rt.position.y - 30);
+    }
+
+    public void HowToPlayButton(bool visible)
+    {
+        questionMark.SetActive(visible);
     }
 
     public void AttemptPlayGame1(string scene)

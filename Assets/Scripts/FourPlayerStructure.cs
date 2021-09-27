@@ -315,7 +315,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 1;
             nextPlayer = 2;
-            Instantiate(blocks[shapeValue, 0], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 0], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1.5f), Quaternion.identity);
             playerText[0].GetComponent<Animator>().Play("Player1Active");
         }
         else
@@ -330,7 +330,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 2;
             nextPlayer = 3;
-            Instantiate(blocks[shapeValue, 1], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 1], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1.5f), Quaternion.identity);
             playerText[1].GetComponent<Animator>().Play("Player2Active");
         }
         else
@@ -345,7 +345,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 3;
             nextPlayer = 4;
-            Instantiate(blocks[shapeValue, 2], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 2], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1.5f), Quaternion.identity);
             playerText[2].GetComponent<Animator>().Play("Player3Active");
         }
         else
@@ -360,7 +360,7 @@ public class FourPlayerStructure : MonoBehaviour
         {
             currentPlayer = 4;
             nextPlayer = 1;
-            Instantiate(blocks[shapeValue, 3], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1), Quaternion.identity);
+            Instantiate(blocks[shapeValue, 3], new Vector2(platform.GetComponent<Transform>().position.x, tempMaxHeight + 1.5f), Quaternion.identity);
             playerText[3].GetComponent<Animator>().Play("Player4Active");
 
             //changes what shape is used in next round
