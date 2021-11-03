@@ -479,31 +479,27 @@ public class FourPlayerStructure : MonoBehaviour
     {
         //make it play sound
         GetComponent<AudioSource>().clip = winSound;
+
         //particle colour
-        if (leaderboard[0] == "Player 1")
-        {
-            particles[0].GetComponent<ParticleSystem>().startColor = colours[0];
-            particles[1].GetComponent<ParticleSystem>().startColor = colours[0];
-            particles[2].GetComponent<ParticleSystem>().startColor = colours[0];
-        }
+        Color particleColor = colours[0];
         if (leaderboard[0] == "Player 2")
         {
-            particles[0].GetComponent<ParticleSystem>().startColor = colours[1];
-            particles[1].GetComponent<ParticleSystem>().startColor = colours[1];
-            particles[2].GetComponent<ParticleSystem>().startColor = colours[1];
+            particleColor = colours[1];
         }
-        if (leaderboard[0] == "Player 3")
+        else if (leaderboard[0] == "Player 3")
         {
-            particles[0].GetComponent<ParticleSystem>().startColor = colours[2];
-            particles[1].GetComponent<ParticleSystem>().startColor = colours[2];
-            particles[2].GetComponent<ParticleSystem>().startColor = colours[2];
+            particleColor = colours[2];
         }
-        if (leaderboard[0] == "Player 4")
+        else if (leaderboard[0] == "Player 4")
         {
-            particles[0].GetComponent<ParticleSystem>().startColor = colours[3];
-            particles[1].GetComponent<ParticleSystem>().startColor = colours[3];
-            particles[2].GetComponent<ParticleSystem>().startColor = colours[3];
+            particleColor = colours[3];
         }
+        ParticleSystem.MainModule ps0Main = particles[0].GetComponent<ParticleSystem>().main;
+        ParticleSystem.MainModule ps1Main = particles[1].GetComponent<ParticleSystem>().main;
+        ParticleSystem.MainModule ps2Main = particles[2].GetComponent<ParticleSystem>().main;
+        ps0Main.startColor = particleColor;
+        ps1Main.startColor = particleColor;
+        ps2Main.startColor = particleColor;
 
         //play particle
         particles[0].GetComponent<ParticleSystem>().Play();
