@@ -13,7 +13,7 @@ public class BlockDetectorSinglePlayer : MonoBehaviour
         {
             if (collision.gameObject.GetComponent<DragAndDrop>().canBeDestroyed == true)
             {
-                Debug.Log(detecting);
+                //Debug.Log(detecting);
                 //destroy object
                 Destroy(collision.collider);
                 if (detecting)

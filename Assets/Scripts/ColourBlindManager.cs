@@ -9,7 +9,7 @@ public class ColourBlindManager : MonoBehaviour
     public void ChangeColourBlindMode(bool mode)
     {
         colourBlindMode = mode;
-        Debug.Log(mode);
+        //Debug.Log(mode);
     }
 
     public bool ReturnMode()
