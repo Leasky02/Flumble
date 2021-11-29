@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,8 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 09eb1c753e2a34487b2be43f75bf2547,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +119,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -192,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraType: up
-  character: {fileID: 519420028}
+  cameraObject: {fileID: 0}
 --- !u!1 &16387551
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,7 +410,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135da4495e31ac5409bbc82e8f29b53f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tagName: block
   audioClip: {fileID: 8300000, guid: 93dd3c5ee7317ab45ab22b707fbd8fbe, type: 3}
 --- !u!212 &95942555
 SpriteRenderer:
@@ -424,6 +426,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -456,7 +459,7 @@ SpriteRenderer:
   m_Size: {x: 0.16, y: 0.16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &95942556
@@ -471,6 +474,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 588a64887d50eb441b503fa78c5e16bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unusable: 0
+  active: 0
+  usingThisObject: 0
+  useable: 1
+  canBeDestroyed: 0
+  colourBlindText: {fileID: 0}
+  binSound: {fileID: 0}
 --- !u!61 &95942557
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -667,7 +677,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.6185475, g: 0.7448776, b: 0.9433962, a: 0}
+  m_BackGroundColor: {r: 0.6185475, g: 0.7448776, b: 0.9433962, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -935,6 +945,7 @@ MonoBehaviour:
       bevelSize: 0
       spriteIndex: 0
       corner: 1
+      m_CornerMode: 1
     - position: {x: -2, y: 2, z: 0}
       leftTangent: {x: 0, y: 0, z: 0}
       rightTangent: {x: 0, y: 0, z: 0}
@@ -944,6 +955,7 @@ MonoBehaviour:
       bevelSize: 0
       spriteIndex: 0
       corner: 1
+      m_CornerMode: 1
     - position: {x: 2, y: 2, z: 0}
       leftTangent: {x: 0, y: 0, z: 0}
       rightTangent: {x: 0, y: 0, z: 0}
@@ -953,6 +965,7 @@ MonoBehaviour:
       bevelSize: 0
       spriteIndex: 0
       corner: 1
+      m_CornerMode: 1
     - position: {x: 2, y: -2, z: 0}
       leftTangent: {x: 0, y: 0, z: 0}
       rightTangent: {x: 0, y: 0, z: 0}
@@ -962,6 +975,7 @@ MonoBehaviour:
       bevelSize: 0
       spriteIndex: 0
       corner: 1
+      m_CornerMode: 1
   m_SpriteShape: {fileID: 0}
   m_FillPixelPerUnit: 100
   m_StretchTiling: 1
@@ -976,6 +990,8 @@ MonoBehaviour:
   m_OptimizeCollider: 1
   m_OptimizeGeometry: 1
   m_EnableTangents: 0
+  m_GeometryCached: 0
+  m_UTess2D: 0
 --- !u!1971053207 &788919521
 SpriteShapeRenderer:
   m_ObjectHideFlags: 0
@@ -991,6 +1007,7 @@ SpriteShapeRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1021,8 +1038,8 @@ SpriteShapeRenderer:
   m_ShapeTexture: {fileID: 0}
   m_Sprites: []
   m_LocalAABB:
-    m_Center: {x: 0, y: -0.00000023841858, z: 0}
-    m_Extent: {x: 2.0000002, y: 2, z: 0}
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 2.0000002, y: 2.0000002, z: 0}
 --- !u!4 &788919522
 Transform:
   m_ObjectHideFlags: 0
@@ -1049,7 +1066,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135da4495e31ac5409bbc82e8f29b53f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tagName: block
   audioClip: {fileID: 8300000, guid: a5c8718626f3dd0408108420348d0eae, type: 3}
 --- !u!82 &788919524
 AudioSource:
@@ -1196,6 +1212,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1228,7 +1245,7 @@ SpriteRenderer:
   m_Size: {x: 12, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &875573298
@@ -1290,6 +1307,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 588a64887d50eb441b503fa78c5e16bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unusable: 0
+  active: 0
+  usingThisObject: 0
+  useable: 1
+  canBeDestroyed: 0
+  colourBlindText: {fileID: 0}
+  binSound: {fileID: 0}
 --- !u!1 &1109144725
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,6 +1372,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!223 &1109144728
 Canvas:
   m_ObjectHideFlags: 0
@@ -1462,7 +1487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraType: down
-  character: {fileID: 519420028}
+  cameraObject: {fileID: 0}
 --- !u!1 &1386337645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1662,6 +1687,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1694,7 +1720,7 @@ SpriteRenderer:
   m_Size: {x: 4, y: 4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!58 &1875647372
@@ -1746,6 +1772,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 588a64887d50eb441b503fa78c5e16bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unusable: 0
+  active: 0
+  usingThisObject: 0
+  useable: 1
+  canBeDestroyed: 0
+  colourBlindText: {fileID: 0}
+  binSound: {fileID: 0}
 --- !u!1 &1974024542
 GameObject:
   m_ObjectHideFlags: 0
@@ -1849,6 +1882,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2057,7 +2091,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135da4495e31ac5409bbc82e8f29b53f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tagName: block
   audioClip: {fileID: 8300000, guid: 93dd3c5ee7317ab45ab22b707fbd8fbe, type: 3}
 --- !u!212 &2103618651
 SpriteRenderer:
@@ -2074,6 +2107,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2106,7 +2140,7 @@ SpriteRenderer:
   m_Size: {x: 0.16, y: 0.16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &2103618652
@@ -2121,6 +2155,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 588a64887d50eb441b503fa78c5e16bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unusable: 0
+  active: 0
+  usingThisObject: 0
+  useable: 1
+  canBeDestroyed: 0
+  colourBlindText: {fileID: 0}
+  binSound: {fileID: 0}
 --- !u!61 &2103618653
 BoxCollider2D:
   m_ObjectHideFlags: 0
